@@ -1,49 +1,85 @@
+const app = require("express").Router();
+const db = require("../../models")
 
-app.post('/submit', ({ body }, res) => {
-    Note.create(body)
-      .then(dbNote => {
-        res.json(dbNote);
+app.post('/api/thoughts', ({ body }, res) => {
+    db.Thought.create(body)
+      .then(thoughtData => {
+        res.json(thoughtData);
       })
       .catch(err => {
         res.json(err);
       });
   });
   
-  app.get('/all', (req, res) => {
-    Note.find({})
-      .then(dbNote => {
-        res.json(dbNote);
+  app.get('/api/thoughts', (req, res) => {
+    db.Thought.find({})
+      .then(thoughtData => {
+        res.json(thoughtData);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+
+    
+  app.get('/api/thoughts', (req, res) => {
+    db.Thought.findById(req.params.id)
+      .then(thoughtData => {
+        res.json(thoughtData);
       })
       .catch(err => {
         res.json(err);
       });
   });
   
-  app.post('/update/:id', ({ params, body }, res) => {
-    Note.findOneAndUpdate({ _id: params.id }, body, { new: true })
-      .then(dbNote => {
-        if (!dbNote) {
-          res.json({ message: 'No note found with this id!' });
+  app.put('/api/thoughts/:id', ({ params, body }, res) => {
+    db.Thought.findOneAndUpdate({ _id: params.id }, body, { new: true })
+      .then(thoughtData => {
+        if (!thoughtData) {
+          res.json({ message: 'No db.Thought found with this id!' });
           return;
         }
-        res.json(dbNote);
+        res.json(thoughtData);
       })
       .catch(err => {
         res.json(err);
       });
   });
   
-  app.delete('/delete/:id', ({ params }, res) => {
-    Note.findOneAndDelete({ _id: params.id })
-      .then(dbNote => {
-        if (!dbNote) {
-          res.json({ message: 'No note found with this id!' });
+  app.delete('/api/thoughts/:id', ({ params }, res) => {
+    db.Thought.findOneAndDelete({ _id: params.id })
+      .then(thoughtData => {
+        if (!thoughtData) {
+          res.json({ message: 'No db.Thought found with this id!' });
           return;
         }
-        res.json(dbNote);
+        res.json(thoughtData);
       })
       .catch(err => {
         res.json(err);
       });
   });
   
+
+//update
+router.post("/api/thoughts/:thoughtId/reactions", function (req, res) {
+  db.Thought.findOneAndUpdate({_id:req.params.userId},
+       {addToSet:{reactions:req.body}},
+       {new:true}) 
+      .then(function (records) {
+          res.json(records)
+      })
+})
+
+//update
+
+router.delete("/api/thoughts/:thoughtId/reactions", function (req, res) {
+  db.Thought.findOneAndUpdate({_id:req.params.userId},
+       {$pull:{reactionID:req.params.reactionID}},
+       {new:true}) 
+      .then(function (records) {
+          res.json(records)
+      })
+})
+
+  module.exports = app
