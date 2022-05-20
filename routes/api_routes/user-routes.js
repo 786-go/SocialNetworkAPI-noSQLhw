@@ -39,9 +39,9 @@ router.delete("/api/users/:id", function (req, res) {
 //update
 router.post("/api/users/:userId/friends/:friendId", function (req, res) {
     db.User.findOneAndUpdate({_id:req.params.userId},
-         {addToSet:{friends:req.params.friendId}},
+         {$push:{friends:req.params.friendId}},
          {new:true}) 
-        .then(function (records) {
+        .then(function (records) {console.log(records)
             res.json(records)
         })
 })
@@ -50,7 +50,7 @@ router.post("/api/users/:userId/friends/:friendId", function (req, res) {
 
 router.delete("/api/users/:userId/friends/:friendId", function (req, res) {
     db.User.findOneAndUpdate({_id:req.params.userId},
-         {addToSet:{friends:req.params.friendId}},
+         {$pull:{friends:req.params.friendId}},
          {new:true}) 
         .then(function (records) {
             res.json(records)

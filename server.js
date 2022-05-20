@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
+const{userRoutes} = require("./routes/api_routes/index-routes")
+const{thoughtsRoutes} = require("./routes/api_routes/index-routes")
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -18,6 +19,9 @@ mongoose.connect(
 )
 
 mongoose.set('debug', true);
+
+app.use(userRoutes)
+app.use(thoughtsRoutes)
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);

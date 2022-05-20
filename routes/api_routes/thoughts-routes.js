@@ -62,7 +62,7 @@ app.post('/api/thoughts', ({ body }, res) => {
   
 
 //update
-router.post("/api/thoughts/:thoughtId/reactions", function (req, res) {
+app.post("/api/thoughts/:thoughtId/reactions", function (req, res) {
   db.Thought.findOneAndUpdate({_id:req.params.userId},
        {addToSet:{reactions:req.body}},
        {new:true}) 
@@ -73,7 +73,7 @@ router.post("/api/thoughts/:thoughtId/reactions", function (req, res) {
 
 //update
 
-router.delete("/api/thoughts/:thoughtId/reactions", function (req, res) {
+app.delete("/api/thoughts/:thoughtId/reactions", function (req, res) {
   db.Thought.findOneAndUpdate({_id:req.params.userId},
        {$pull:{reactionID:req.params.reactionID}},
        {new:true}) 
